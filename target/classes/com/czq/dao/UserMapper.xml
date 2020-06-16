@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.czq.dao.UserMapper">
+    <select id="queryUserByUsername" resultType="User">
+        select * from ssmcloud.user
+        where username=#{username,jdbcType=VARCHAR} and password=#{password,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryUser" resultType="User">
+        select * from ssmcloud.user
+        where username=#{username,jdbcType=VARCHAR}
+    </select>
+
+    <update id="queryPassword" parameterType="com.czq.pojo.User">
+        update ssmcloud.user set password=#{password,jdbcType=VARCHAR}
+        where username=#{username,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="addUser" parameterType="com.czq.pojo.User">
+    insert into ssmcloud.user (username,password,phone,email
+    )
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+    #{phone,jdbcType=VARCHAR},
+    #{email,jdbcType=VARCHAR}
+    )
+</insert>
+</mapper>
