@@ -45,7 +45,8 @@
 					<span class="person"><img src="../images/person.jpg"></span> <span>${sessionScope.user.username}</span>
 <%--					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span>当前目录:${sessionScope.currentFolder.hdfsPath }</span>--%>
 					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span><a
-						href="">客户端下载</a></span> <span class="center">会员中心</span>
+						href="${pageContext.request.contextPath}/User/outLogin">注销</a></span> <span class="center"><a
+						href="${pageContext.request.contextPath}/User/userMessage">会员中心</a></span>
 				</div>
 			</div>
 			<div class="content">
@@ -59,7 +60,7 @@
 <%--							</li>--%>
 <%--						</c:forEach>--%>
 						<li><span class="contentBg bg2"></span><a href="">我的分享</a></li>
-						<li><span class="contentBg bg3"></span><a href="recycle.do">回收站</a></li>
+						<li><span class="contentBg bg3"></span><a href="${pageContext.request.contextPath}/file/torecycle">回收站</a></li>
 					</ul>
 				</div>
 				<div class="contentRight" id="contentRight">
@@ -81,55 +82,69 @@
 							<div>
 								<i class="operatLeftBg bg4"></i>我的设备
 							</div>
+							${filemess}
+							${err}
 						</div>
+						${filemess}
+						${err}
 						<div class="operatRight">
-							<input type="text" placeholder="搜索您的文件" /> <span
-								class="searchBg"></span> <span class="sort"></span> <span
-								class="sortTwo"></span>
+							<form action="${pageContext.request.contextPath}/file/findfile?type=${type}">
+							<input type="text" id="type" name="type" placeholder="搜索您的文件类型" />
+								<input type="submit" value="查询" class="searchBg"/>
+<%--							<span class="searchBg"></span>--%>
+							<span class="sort"></span>
+							<span class="sortTwo"></span>
+							</form>
 						</div>
 						<div style="clear: both;"></div>
 					</div>
 					<div class="file">
 						<table rules="rows" frame="below" bordercolor="#F2F6FD">
+							<tr><td colspan="2">全部文件</td></tr>
 							<tr>
-								<td colspan="2">全部文件</td>
-<%--								<td colspan="2" align="right">已加载全部，共${fn:length(sessionScope.folderList)+fn:length(sessionScope.fileList) }个</td>--%>
-							</tr>
-							<tr>
-								<td colspan="2" width="200px"><input type="checkbox"
+								<td colspan="2" width="140px"><input type="checkbox"
 									disabled="disabled" style="margin-right: 10px" />文件名</td>
+								<td>上传人</td>
 								<td>类型</td>
 								<td>大小</td>
 								<td>修改日期</td>
+								<td>操作</td>
 							</tr>
-<%--							<c:forEach var="rf" items="${sessionScope.folderList }">--%>
-<%--								<tr>--%>
-<%--									<td><input type="checkbox" disabled="disabled"--%>
-<%--										style="margin-right: 10px; margin-right: 50px" /> <a--%>
-<%--										href="index.do?folderId=${rf.folderId}"><span--%>
-<%--											class="folder"></span> <c:out value="${rf.folderName }"></c:out></a></td>--%>
-<%--									<td class="hideArea"><a--%>
-<%--										href="index.do?folderId=${rf.folderId}"><span--%>
-<%--											class="share"></span></a></td>--%>
-<%--									<td>目录</td>--%>
-<%--									<td>-</td>--%>
-<%--									<td><c:out value="${rf.createTime }"></c:out></td>--%>
-<%--								</tr>--%>
-<%--							</c:forEach>--%>
-<%--							<c:forEach var="rf" items="${sessionScope.fileList }">--%>
-<%--								<tr>--%>
-<%--									<td><input type="checkbox" value="${rf.fileId }"--%>
-<%--										style="margin-right: 10px; margin-right: 50px" /> <span--%>
-<%--										class="myfile"></span> <c:out value="${rf.fileName }"></c:out></td>--%>
-<%--									<td class="hideArea"><span class="huishouq"--%>
-<%--										onclick="deleteFileFun(${rf.fileId})"></span> <a--%>
-<%--										href="hdfs.do?type=download&fileId=${rf.fileId }"><span--%>
-<%--											class="download"></span></a></td>--%>
-<%--									<td>文件</td>--%>
-<%--									<td><c:out value="${rf.fileSize }"></c:out></td>--%>
-<%--									<td><c:out value="${rf.createTime }"></c:out></td>--%>
-<%--								</tr>--%>
-<%--							</c:forEach>--%>
+							<tbody>
+							<c:forEach var="file" items="${requestScope.list}">
+								<tr>
+									<td>${file.fileName}</td>
+									<td>${file.owner}</td>
+									<td>${file.type}</td>
+									<td>${file.fileSize}</td>
+									<td>${file.createTime}</td>
+									<td align="right">
+										<a href="${pageContext.request.contextPath}/?id=${book.bookId}">预览</a>
+										&nbsp; | &nbsp;
+										<a href="${pageContext.request.contextPath}/file/down/${file.fileId}">下载</a>
+										&nbsp; | &nbsp;
+										<a href="${pageContext.request.contextPath}/file/deletefile/${file.fileId}" onclick="确定要删除吗">删除</a>
+									</td>
+								</tr>
+							</c:forEach>
+							tr align="left">
+							<td class="td2">
+								<span>第${requestScope.pagemsg.currPage }/ ${requestScope.pagemsg.totalPage}页</span>
+								<span>总记录数：${requestScope.pagemsg.totalCount }  每页显示:${requestScope.pagemsg.pageSize}</span>
+								<span>
+                        <c:if test="${requestScope.pagemsg.currPage != 1}">
+							<a href="${pageContext.request.contextPath }/file/all?currentPage=1">[首页]</a>
+							<a href="${pageContext.request.contextPath }/file/all?currentPage=${requestScope.pagemsg.currPage-1}">[上一页]</a>
+						</c:if>
+
+                        <c:if test="${requestScope.pagemsg.currPage != requestScope.pagemsg.totalPage}">
+							<a href="${pageContext.request.contextPath }/file/all?currentPage=${requestScope.pagemsg.currPage+1}">[下一页]</a>
+							<a href="${pageContext.request.contextPath }/file/all?currentPage=${requestScope.pagemsg.totalPage}">[尾页]</a>
+						</c:if>
+                          </span>
+							</td>
+							</tr>
+							</tbody>
 						</table>
 					</div>
 				</div>
@@ -140,7 +155,7 @@
 	<div id="createFileWindow" class="easyui-window" title="Modal Window"
 		data-options="modal:true,closed:true,iconCls:'icon-save'"
 		style="width: 300px; height: 120px; padding: 10px;">
-		<form action="hdfs.do?type=createFolder" method="post">
+		<form action="${pageContext.request.contextPath}/file/createfold" method="post">
 			<table>
 				<tr>
 					<td>请输入文件夹名称:</td>
@@ -153,10 +168,10 @@
 			</table>
 		</form>
 	</div>
-	<form id="uploadForm" action="upload.do" method="post"
-		enctype="multipart/form-data">
+	<form id="uploadForm" action="${pageContext.request.contextPath}/file/up" method="post"
+		  enctype="multipart/form-data">
 		<input type="file" name="uploadFile" id="uploadFile"
-			style="visibility: hidden; position: absolute; top: 0px; width: 0px" />
+			   style="visibility: hidden; position: absolute; top: 0px; width: 0px" />
 	</form>
 </body>
 </html>

@@ -58,7 +58,8 @@
 				</div>
 				<div class="bannerRight">
 					<span class="person"><img src="../images/person.jpg"></span> <span>${sessionScope.user.userName }</span>
-					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span>当前目录:${sessionScope.currentFolder.hdfsPath }</span>
+					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span>当前目录:</span>
+<%--					${sessionScope.currentFolder.hdfsPath }--%>
 					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span><a
 						href="">客户端下载</a></span> <span class="center">会员中心</span>
 				</div>
@@ -97,7 +98,7 @@
 			</div>
 		</div>
 	</div>
-	<form id="uploadForm" action="upload.do" method="post"
+	<form id="uploadForm" action="${pageContext.request.contextPath}/file/up1" method="post"
 		enctype="multipart/form-data">
 		<input type="file" name="uploadFile" id="uploadFile"
 			style="visibility: hidden; position: absolute; top: 0px; width: 0px" />

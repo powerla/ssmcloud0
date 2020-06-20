@@ -10,7 +10,26 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
-<!--       1.注解驱动-->
+
+    <context:annotation-config />
+    <!-- 必须放在<mvc:annotation-driven>之前 -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/plain;charset=UTF-8</value>
+                            <value>text/html;charset=UTF-8</value>
+                            <value>applicaiton/javascript;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!--       1.注解驱动-->
     <mvc:annotation-driven/>
 <!--    2.静态资源过滤-->
     <mvc:default-servlet-handler/>
@@ -19,10 +38,42 @@
         <context:include-filter type="annotation"
                                 expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
+<!--国际化-->
+    <!--默认语言-->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="zh_CN"/>
+    </bean>
+    <!-- 国际化资源文件 messageSource配置的是国际化资源文件的路径， classpath:messages指的是classpath路径下的 messages_zh_CN.properties文件和messages_en_US.properties文件设置“useCodeAsDefaultMessage”，默认为false当Spring在ResourceBundle中找不到messageKey的话，抛出NoSuchMessageException，把它设置为True，则找不到不会抛出异常，而是使用messageKey作为返回值。 -->
+    <bean id="messageSource"  class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:message"/>
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="useCodeAsDefaultMessage" value="true" />
+    </bean>
 
-<!--    4.视图解析器-->
+    <!--    4.视图解析器-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+    <!--文件上传-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="10485760"/>
+        <property name="maxInMemorySize" value="40960"/>
+    </bean>
+<!--    拦截器-->
+    <mvc:interceptors>
+       <mvc:interceptor>
+           <mvc:mapping path="/User/*"/>
+           <mvc:exclude-mapping path="/User/login"/>
+           <mvc:exclude-mapping path="/User/tologin"/>
+           <mvc:exclude-mapping path="/User/forget"/>
+           <mvc:exclude-mapping path="/User/modify"/>
+           <mvc:exclude-mapping path="/User/register"/>
+           <mvc:exclude-mapping path="/User/tiaozhuan"/>
+           <mvc:exclude-mapping path="/User/locale"/>
+           <mvc:exclude-mapping path="/upload"/>
+            <bean class="com.czq.interceptor.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

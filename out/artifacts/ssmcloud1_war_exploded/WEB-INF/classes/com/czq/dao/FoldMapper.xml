@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.czq.dao.FoldMapper">
+    <select id="queryID" resultType="Fold">
+        select * from ssmcloud.folder
+        where folderId=#{folderId,jdbcType=INTEGER}
+    </select>
+
+    <insert id="addFold" parameterType="com.czq.pojo.Fold">
+    insert into ssmcloud.folder(folderId,folderName,hdfsPath,parentId
+    ) values (#{folderId},
+               #{folderName},
+               #{hdfsPath},
+               #{parentId}
+    )
+    </insert>
+</mapper>

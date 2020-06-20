@@ -1,4 +1,3 @@
-<%@ page import="com.pojo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -14,7 +13,16 @@
 <script type="text/javascript" src="../js/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="../js/jquery/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../js/index.js"></script>
+<script type="text/javascript">
+	function todelete(id) {
+		if(confirm("确定删除嘛"))
+		{
+			document.location.href="${pageContext.request.contextPath}/file/truedelete/"+id;
+		}
+		return false;
 
+	}
+</script>
 </head>
 <body>
 	<div id="index">
@@ -33,10 +41,10 @@
 					</ul>
 				</div>
 				<div class="bannerRight">
-					<span class="person"><img src="../images/person.jpg"></span> <span>${sessionScope.user.userName }</span>
-					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span>当前目录:${sessionScope.currentFolder.hdfsPath }</span>
+					<span class="person"><img src="../images/person.jpg"></span> <span>${sessionScope.user.username }</span>
+<%--					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span>当前目录:${sessionScope.currentFolder.hdfsPath }</span>--%>
 					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span><a
-						href="">客户端下载</a></span> <span class="center">会员中心</span>
+						href="${pageContext.request.contextPath}/User/outLogin">注销</a></span> <span class="center">会员中心</span>
 				</div>
 			</div>
 			<div class="content">
@@ -71,28 +79,34 @@
 						<table rules="rows" frame="below" bordercolor="#F2F6FD">
 							<tr>
 								<td colspan="2">全部文件</td>
-								<td colspan="2" align="right">已加载全部，共${fn:length(sessionScope.folderList)+fn:length(sessionScope.fileList) }个</td>
+<%--								<td colspan="2" align="right">已加载全部，共${fn:length(sessionScope.folderList)+fn:length(sessionScope.fileList) }个</td>--%>
 							</tr>
 							<tr>
-								<td colspan="2" width="200px"><input type="checkbox"
-									disabled="disabled" style="margin-right: 10px" />文件名</td>
+								<td colspan="2" width="140px"><input type="checkbox"
+																	 disabled="disabled" style="margin-right: 10px" />文件名</td>
+								<td>上传人</td>
 								<td>类型</td>
 								<td>大小</td>
 								<td>修改日期</td>
+								<td>操作</td>
 							</tr>
-							<c:forEach var="rf" items="${sessionScope.recycleFileList }">
+							<tbody>
+							<c:forEach var="file" items="${filemove}">
 								<tr>
-									<td><input type="checkbox" value="${rf.fileId }"
-										style="margin-right: 10px; margin-right: 50px" /> <span
-										class="myfile"></span> <c:out value="${rf.fileName }"></c:out></td>
-									<td class="hideArea"><a
-										href="hdfs.do?type=download&fileId=${rf.fileId }"><span
-											class="download"></span></a></td>
-									<td>文件</td>
-									<td><c:out value="${rf.fileSize }"></c:out></td>
-									<td><c:out value="${rf.deleteTime }"></c:out></td>
+									<td>${file.fileName}</td>
+									<td>${file.owner}</td>
+									<td>${file.type}</td>
+									<td>${file.fileSize}</td>
+									<td>${file.createTime}</td>
+									<td>
+
+										<a href="${pageContext.request.contextPath}/file/huifu/${file.fileId}">恢复</a>
+										&nbsp; |
+										<a href="" onclick="return todelete(${file.fileId})">永久删除</a>
+									</td>
 								</tr>
 							</c:forEach>
+							</tbody>
 						</table>
 					</div>
 				</div>

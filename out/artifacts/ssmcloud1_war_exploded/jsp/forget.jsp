@@ -35,6 +35,7 @@
     <div class="content">
         <div class="reContent">
             <div class="reContentLeft">
+                <span style="color:chocolate;font-weight:bold;margin-left:auto;margin-right:auto;">${err}</span>
                 <form action="${pageContext.request.contextPath}/User/forget" method="post"
                       onsubmit="return checkLoad()">
                     <div>

@@ -22,6 +22,7 @@
     <mappers>
         <!-- 通过 resource 方法一次加载一个映射文件 -->
         <mapper resource="com/czq/dao/UserMapper.xml"/>
+        <mapper resource="com/czq/dao/FoldMapper.xml"/>
 
     </mappers>
 </configuration>
