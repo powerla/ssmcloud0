@@ -13,7 +13,7 @@
 
 </head>
 <body>
-您好没有登录
+您还没有登录
 <div class="main">
     <script type="text/javascript">
         var t=3;//设定跳转的时间

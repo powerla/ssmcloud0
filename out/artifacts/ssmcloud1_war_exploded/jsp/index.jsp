@@ -119,7 +119,7 @@
 									<td>${file.fileSize}</td>
 									<td>${file.createTime}</td>
 									<td align="right">
-										<a href="${pageContext.request.contextPath}/?id=${book.bookId}">预览</a>
+										<a href="${pageContext.request.contextPath}/file/yulan/${file.fileId}">预览</a>
 										&nbsp; | &nbsp;
 										<a href="${pageContext.request.contextPath}/file/down/${file.fileId}">下载</a>
 										&nbsp; | &nbsp;
@@ -127,7 +127,6 @@
 									</td>
 								</tr>
 							</c:forEach>
-							tr align="left">
 							<td class="td2">
 								<span>第${requestScope.pagemsg.currPage }/ ${requestScope.pagemsg.totalPage}页</span>
 								<span>总记录数：${requestScope.pagemsg.totalCount }  每页显示:${requestScope.pagemsg.pageSize}</span>

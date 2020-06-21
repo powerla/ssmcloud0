@@ -1,6 +1,4 @@
 package com.czq.controller;
-
-
 import com.czq.pojo.User;
 import com.czq.service.FileService;
 import com.czq.service.FoldService;
@@ -12,11 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -63,11 +62,12 @@ public class FileController {
         return "index";
     }
     @RequestMapping("/all")
-    public String listpage(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage, Model model,HttpSession session)
+    public String listpage(HttpServletRequest request,@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage, Model model,HttpSession session)
     {
         List<com.czq.pojo.File> list = fileService.findByPage(currentPage).getLists();
         model.addAttribute("list",list);
-        model.addAttribute("user",session.getAttribute("user"));
+        User user= (User) request.getSession().getAttribute("user");
+        model.addAttribute("user",user.getUsername());
         model.addAttribute("pagemsg", fileService.findByPage(currentPage));
         return "index";
     }
@@ -121,6 +121,25 @@ public class FileController {
         model.addAttribute("filemess", "上传成功");
         return "redirect:/file/all";
     }
+
+    //图片预览
+    @RequestMapping("/yulan/{fileId}")
+    public void yulan(HttpServletResponse response,@PathVariable("fileId") int fileId)
+    {
+        com.czq.pojo.File file1=fileService.queryByfileId(fileId);
+        String hdfsPath=file1.getHdfsPath();
+        //获取图片格式
+        String format=file1.getType();
+        File file = new File(hdfsPath);
+        try{
+            BufferedImage image= ImageIO.read(new FileInputStream(file));
+            ImageIO.write(image,format,response.getOutputStream());
+        }catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @RequestMapping("/down/{fileId}")
     public String down(HttpServletResponse response,@PathVariable("fileId") int fileId)throws Exception{
 //        String path = "F:\\tupian";

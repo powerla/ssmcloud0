@@ -43,8 +43,9 @@
 				<div class="bannerRight">
 					<span class="person"><img src="../images/person.jpg"></span> <span>${sessionScope.user.username }</span>
 <%--					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span>当前目录:${sessionScope.currentFolder.hdfsPath }</span>--%>
-					<span style="margin-left: 10px; margin-right: 10px;">丨</span> <span><a
-						href="${pageContext.request.contextPath}/User/outLogin">注销</a></span> <span class="center">会员中心</span>
+					<span style="margin-left: 10px; margin-right: 10px;">丨</span>
+					<span><a href="${pageContext.request.contextPath}/User/outLogin">注销</a></span>
+					<span class="center"><a href="${pageContext.request.contextPath}/User/userMessage">会员中心</a></span>
 				</div>
 			</div>
 			<div class="content">
